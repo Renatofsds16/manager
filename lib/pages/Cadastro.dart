@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:manager/pages/Home.dart';
 
+import '../manage_firebase/manage_firebase.dart';
 import '../validator/validate_fields.dart';
 
 class Cadastro extends StatefulWidget {
@@ -90,7 +92,7 @@ class _CadastroState extends State<Cadastro> {
       ),
     );
   }
-  _validarCampos(){
+  _validarCampos()async {
     ValidatorFields validatorNome = ValidatorFields(_controllerNomeCadastro);
     ValidatorFields validatorEmail = ValidatorFields(_controllerEmailCadastro);
     ValidatorFields validatorSenha = ValidatorFields(_controllerSenhaCadastro);
@@ -101,10 +103,15 @@ class _CadastroState extends State<Cadastro> {
         if(validatorSenha.validateField()){
           _erroSenha = null;
           //cadastra usuario
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const Home()));
+          String email = _controllerEmailCadastro.text;
+          String senha = _controllerSenhaCadastro.text;
+          UserCredential userCredential = await _cadastraUsuario(email,senha);
+          if(userCredential.user != null){
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const Home()));
+          }
         }else{
           setState(() {
             _erroSenha = 'O campo senha invalido digite pelo menos 6 caractere';
@@ -123,5 +130,10 @@ class _CadastroState extends State<Cadastro> {
         print(_erroNome);
       });
     }
+  }
+  _cadastraUsuario(String email,String senha)async {
+    ManagerFirebaseAuth managerFirebaseAuth = ManagerFirebaseAuth();
+    UserCredential usuario = await managerFirebaseAuth.createUserEmailAndPassword(email, senha);
+    return usuario;
   }
 }
