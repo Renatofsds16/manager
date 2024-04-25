@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:manager/abas/Vencimentos.dart';
 import 'package:manager/abas/debitos.dart';
 
@@ -11,8 +13,10 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
+class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   TabController? _tabController;
+  TextEditingController _controllerNome = TextEditingController();
+  TextEditingController _controllerDescricao = TextEditingController();
 
   @override
   void initState() {
@@ -27,16 +31,17 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
         backgroundColor: Colors.amber,
         title: const Text('Sua atividade finaceira'),
         actions: const [
-          Padding(padding: EdgeInsets.only(right: 16),
-          child: Icon(Icons.close))
+          Padding(padding: EdgeInsets.only(right: 16), child: Icon(Icons.close))
         ],
         bottom: TabBar(
-
           controller: _tabController,
           tabs: const [
-            Tab(text: 'Ganhos',icon: Icon(Icons.monetization_on),),
-            Tab(text: 'Debito',icon: Icon(Icons.device_thermostat_rounded)),
-            Tab(text: 'Vencimento',icon: Icon(Icons.date_range)),
+            Tab(
+              text: 'Ganhos',
+              icon: Icon(Icons.monetization_on),
+            ),
+            Tab(text: 'Debito', icon: Icon(Icons.device_thermostat_rounded)),
+            Tab(text: 'Vencimento', icon: Icon(Icons.date_range)),
           ],
         ),
       ),
@@ -48,6 +53,17 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
           Vencimentos(),
         ],
       ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(16),
+        child: FloatingActionButton(
+          shape: const StadiumBorder(),
+          onPressed: (){},
+          child: const Text('+',
+              style: TextStyle(fontSize: 40, color: Colors.black38)),
+        ),
+      ),
     );
   }
+
+
 }
