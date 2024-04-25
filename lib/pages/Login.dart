@@ -1,6 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:manager/pages/Home.dart';
+import 'package:manager/validator/validate_fields.dart';
 import 'Cadastro.dart';
 
 class Login extends StatefulWidget {
@@ -11,92 +11,97 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  FirebaseAuth auth = FirebaseAuth.instance;
-  TextEditingController controllerEmail = TextEditingController();
-  TextEditingController controllerSenha = TextEditingController();
-  String? errorEmail;
-  String? errorSenha;
+  TextEditingController _controllerEmail = TextEditingController();
+  TextEditingController _controllerPassword = TextEditingController();
+  String? _errorEmail;
+  String? _errorPassword;
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: Colors.amber,
         title: Text('Login'),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.all(16),
-            child: TextField(
-              controller: controllerEmail,
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                errorText: errorSenha,
-                border: const OutlineInputBorder(),
-                labelText: 'Digite seu email'
-            
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+                padding: const EdgeInsets.all(24),
+                child: Image.asset(
+                  'images/dollar.png',
+                  width: 200,
+                  height: 200,
+                )),
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: TextField(
+                controller: _controllerEmail,
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(
+                    errorText: _errorEmail,
+                    border: const OutlineInputBorder(),
+                    labelText: 'Digite seu email'),
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(16),
-            child: TextField(
-              keyboardType: TextInputType.number,
-              controller: controllerSenha,
-              decoration: InputDecoration(
-                errorText: errorSenha,
-                  border: const OutlineInputBorder(),
-                  labelText: 'Digite sua senha'
-
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: TextField(
+                keyboardType: TextInputType.number,
+                controller: _controllerPassword,
+                decoration: InputDecoration(
+                    errorText: _errorPassword,
+                    border: const OutlineInputBorder(),
+                    labelText: 'Digite sua senha'),
               ),
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('Não ten conta? '),
-              GestureDetector(
-                onTap: (){
-                  Navigator.push(
-                      context,
-                    MaterialPageRoute(
-                        builder: (context)=> Cadastro()
-                    )
-                  );
-                },
-                  child: const Text('Cadastr-se',
-                    style: TextStyle(color: Colors.amber),
-                  )
-              )
-
-            ],
-          ),
-          ElevatedButton(onPressed: loginUsuario, child: Text('Login'))
-        ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Não ten conta? '),
+                GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Cadastro()));
+                    },
+                    child: const Text(
+                      'Cadastr-se',
+                      style: TextStyle(color: Colors.amber),
+                    ))
+              ],
+            ),
+            ElevatedButton(onPressed: () {_validarCampos();}, child: const Text('Login'))
+          ],
+        ),
       ),
     );
   }
-  loginUsuario()async {
-    if(controllerEmail.text.isEmpty){
-      setState(() {
-        errorEmail = 'Por favor digite seu Email';
-      });
-      if(controllerSenha.text.isEmpty){
+
+  _validarCampos() {
+    ValidatorFields validatorEmail = ValidatorFields(_controllerEmail);
+    ValidatorFields validatorPassword = ValidatorFields(_controllerPassword);
+    if(validatorEmail.validatorFieldEmail()){
+      _errorEmail = null;
+      if(validatorPassword.validateField()){
         setState(() {
-          errorSenha = 'Por favor digite sua senha';
+          _errorPassword = null;
         });
+        //logar usuario
+
+        //proxima tela
       }else{
         setState(() {
-          errorSenha = null;
+          _errorPassword = 'verifique a senha e tente novamente';
         });
       }
     }else{
       setState(() {
-        errorEmail = null;
+        _errorEmail = 'Email invalido! Digite novamente';
       });
-      print('Seu email e ${controllerEmail.text}');
     }
   }
 }
