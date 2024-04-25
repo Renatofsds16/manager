@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:manager/abas/Vencimentos.dart';
 import 'package:manager/abas/debitos.dart';
+import 'package:manager/pages/inserir_dados.dart';
 
 import '../abas/ganhos.dart';
 
@@ -15,8 +16,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   TabController? _tabController;
-  TextEditingController _controllerNome = TextEditingController();
-  TextEditingController _controllerDescricao = TextEditingController();
+
 
   @override
   void initState() {
@@ -57,12 +57,15 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         padding: const EdgeInsets.all(16),
         child: FloatingActionButton(
           shape: const StadiumBorder(),
-          onPressed: (){},
+          onPressed: _newDisplaY,
           child: const Text('+',
               style: TextStyle(fontSize: 40, color: Colors.black38)),
         ),
       ),
     );
+  }
+  _newDisplaY(){
+    Navigator.push(context, MaterialPageRoute(builder: (context)=> const InserirDados()));
   }
 
 

@@ -16,8 +16,7 @@ class _GanhosState extends State<Ganhos> {
       body: ListView.builder(
         itemCount: _listaContas.length,
           itemBuilder: (context,index){
-          return ListTile(
-
+          return const ListTile(
           );
           }
       )

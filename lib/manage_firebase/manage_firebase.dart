@@ -4,7 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class ManagerFirebaseAuth{
-  FirebaseAuth auth = FirebaseAuth.instance;
+  FirebaseAuth _auth = FirebaseAuth.instance;
+
+
+
 
   static final ManagerFirebaseAuth _managerFirebaseAuth = ManagerFirebaseAuth.internal();
   ManagerFirebaseAuth.internal();
@@ -12,7 +15,7 @@ class ManagerFirebaseAuth{
     return _managerFirebaseAuth;
   }
   createUserEmailAndPassword(String email,String password) async {
-    UserCredential? userCredential = await auth.createUserWithEmailAndPassword(
+    UserCredential? userCredential = await _auth.createUserWithEmailAndPassword(
         email: email, password: password
     );
     if(userCredential.user != null){
@@ -21,7 +24,7 @@ class ManagerFirebaseAuth{
 
   }
   Future<UserCredential>? loginUser(String email,String password)async {
-    UserCredential usuario = await auth.signInWithEmailAndPassword(
+    UserCredential usuario = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password
     );
@@ -31,21 +34,30 @@ class ManagerFirebaseAuth{
       return usuario;
     }
   }
-  checkUser()async{
-    User? user  = auth.currentUser;
-    return user;
+  checkUser(){
+    User? user  = _auth.currentUser;
+    if(user != null){
+      return user;
+    }
   }
 
 
   exit()async{
-    await auth.signOut();
+    await _auth.signOut();
   }
 
 
 }
 
 class ManagerFirebaseFirestore {
-
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  ManagerFirebaseAuth managerFirebaseAuth = ManagerFirebaseAuth();
+  saveData()async{
+    User? usuario = managerFirebaseAuth.checkUser();
+    if(usuario != null){
+      _db.collection('creditos').doc().set({'teste':'teste'});
+    }
+  }
 }
 
 class ManagerFirebaseStorage{
